@@ -3,13 +3,12 @@
 A reworking of MineClone 2's mcl_signs to be colorable and made to glow. Rquires Minetest and Mineclone2.
 ---
 
-Created by Michieal (FaerRaven).
+Created by Michieal (FaerRaven) @ DateTime: 10/14/22 4:05 PM
 
-DateTime: 10/14/22 4:05 PM
+Reworked to be an API and to allow players to color and/or make the lettering for the signs glow (be bright at night).
+Reworked by Michieal (FaerRaven), including the sign textures batch changed to be white instead of the original black.
 
-
-Reworked to be an API and to allow players to color, and/or make the lettering for the signs glow (be bright at night).
-Reworked by Michieal (FaerRaven), including the sign textures batch changed to be white instead of the original black.  
+A special thanks to Cora for pointing me in the right direction (as always).
 
 The original Mod, MCL_SIGNS is based on reworked signs mod by PilzAdam:
 
@@ -27,3 +26,10 @@ License of models: GPLv3 (https://www.gnu.org/licenses/gpl-3.0.html)
 Models author: 22i.
 
 Source: https://github.com/22i/amc
+
+Mineclone 2 source code:
+https://git.minetest.land/MineClone2/MineClone2
+
+---
+NOTE: This MODule requires Glow Squids in order for all features to work 100% correctly. Glow Squids are currently
+in review by the MineClone 2 Team, and should be available soon after this initial release of the new signs.
