@@ -116,6 +116,16 @@ mcl_signs.signtext_info_wall = {
 mcl_signs.signtext_info_standing = {}
 mcl_signs.sign_groups = { handy = 1, axey = 1, deco_block = 1, material_wood = 1, attached_node = 1, dig_by_piston = 1, flammable = -1 }
 
+--- This allows optional mods and helps prevent breaking.
+---
+--- modname: the mod that defines the wood to add; item_name: the item_string of the wood to add.
+--- eventually, this will become modname, item_name, coloration_code.
+function mcl_signs:register_wood (modname, item_name)
+    if minetest.get_modpath(modname) then
+         table.insert(mcl_signs.woods,item_name)
+    end
+end
+
 -- HELPER FUNCTIONS' VARIABLES
 local sign_glow = 6
 local Dyes_table = {

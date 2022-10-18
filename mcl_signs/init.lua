@@ -124,6 +124,7 @@ end
 
 minetest.register_alias("signs:sign_wall", "mcl_signs:wall_sign")
 minetest.register_alias("signs:sign_yard", "mcl_signs:standing_sign")
+minetest.register_alias("mcl_signs:wall_sign 3", "mcl_signs:wall_sign")
 
 minetest.register_lbm({
     name = "mcl_signs:respawn_entities",
