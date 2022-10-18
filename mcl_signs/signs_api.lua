@@ -8,7 +8,7 @@
 mcl_signs = {}
 
 -- LOCALIZATION
-local S = minetest.get_translator(modname)
+local S = minetest.get_translator("mcl_signs")
 -- Signs form
 local F = minetest.formspec_escape
 
@@ -55,13 +55,11 @@ else
     end
 end
 
--- Help Functions' Variables
-local n = 23 / 56 - 1 / 128
-local pi = math.pi
-local sign_glow = 6
-
 -- for testing purposes
 -- local test_color = "#BC0000"
+
+local pi = math.pi
+local n = 23 / 56 - 1 / 128
 
 -- GLOBALS
 --- colors used for wools.
@@ -101,6 +99,7 @@ mcl_colors_official = {
     YELLOW = "#FFFF55",
     WHITE = "#FFFFFF"
 }
+mcl_signs.woods = { "mcl_core:sprucewood", "mcl_core:darkwood", "mcl_core:wood", "mcl_core:birchwood", "mcl_core:junglewood", "mcl_core:acaciawood", "mcl_mangrove:mangrove_wood" }
 
 mcl_signs.signtext_info_wall = {
     { delta = { x = 0, y = 0, z = n }, yaw = 0 },
@@ -110,6 +109,45 @@ mcl_signs.signtext_info_wall = {
 }
 mcl_signs.signtext_info_standing = {}
 mcl_signs.sign_groups = { handy = 1, axey = 1, deco_block = 1, material_wood = 1, attached_node = 1, dig_by_piston = 1, flammable = -1 }
+
+-- HELPER FUNCTIONS' VARIABLES
+local sign_glow = 6
+local Dyes_table = {
+    { "mcl_dye:aqua", mcl_colors_official.AQUA },
+    { "mcl_dye:black", mcl_colors_official.BLACK },
+    { "mcl_dye:blue", mcl_colors_official.BLUE },
+    { "mcl_dye:brown", mcl_colors_official.brown },
+    { "mcl_dye:cyan", mcl_signs.mcl_wool_colors.unicolor_cyan },
+    { "mcl_dye:cyan 2", mcl_signs.mcl_wool_colors.unicolor_cyan },
+    { "mcl_dye:green", mcl_colors_official.GREEN },
+    { "mcl_dye:green 2", mcl_colors_official.GREEN },
+    { "mcl_dye:dark_green", mcl_colors_official.DARK_GREEN },
+    { "mcl_dye:grey", mcl_colors_official.GRAY },
+    { "mcl_dye:grey 2", mcl_signs.mcl_wool_colors.unicolor_grey },
+    { "mcl_dye:grey 3", mcl_colors_official.GRAY },
+    { "mcl_dye:dark_grey", mcl_colors_official.DARK_GRAY },
+    { "mcl_dye:dark_grey 2", mcl_signs.mcl_wool_colors.unicolor_darkgrey },
+    { "mcl_dye:lightblue", mcl_signs.mcl_wool_colors.unicolor_light_blue },
+    { "mcl_dye:lightblue 2", mcl_signs.mcl_wool_colors.unicolor_light_blue },
+    { "mcl_dye:lime", mcl_signs.unicolor_green_or_lime },
+    { "mcl_dye:magenta", mcl_signs.mcl_wool_colors.unicolor_red_violet_magenta },
+    { "mcl_dye:magenta 2", mcl_signs.mcl_wool_colors.unicolor_red_violet_magenta },
+    { "mcl_dye:magenta 3", mcl_signs.mcl_wool_colors.unicolor_red_violet_magenta },
+    { "mcl_dye:orange", mcl_signs.mcl_wool_colors.unicolor_orange },
+    { "mcl_dye:orange 2", mcl_signs.mcl_wool_colors.unicolor_dark_orange },
+    { "mcl_dye:pink", mcl_signs.mcl_wool_colors.unicolor_light_red_pink },
+    { "mcl_dye:pink 2", mcl_signs.mcl_wool_colors.unicolor_light_red_pink },
+    { "mcl_dye:purple", mcl_colors_official.LIGHT_PURPLE },
+    { "mcl_dye:red", mcl_signs.mcl_wool_colors.unicolor_red },
+    { "mcl_dye:red 2", mcl_colors_official.RED },
+    { "mcl_dye:silver", mcl_signs.mcl_wool_colors.unicolor_grey },
+    { "mcl_dye:violet", mcl_colors_official.DARK_PURPLE },
+    { "mcl_dye:violet 2", mcl_colors_official.DARK_PURPLE },
+    { "mcl_dye:white", mcl_colors_official.WHITE },
+    { "mcl_dye:white 3", mcl_colors_official.WHITE },
+    { "mcl_dye:yellow", mcl_colors_official.YELLOW },
+    { "mcl_dye:yellow 2", mcl_signs.mcl_wool_colors.unicolor_yellow },
+}
 
 -- Helper functions
 local function string_to_array(str)
@@ -141,11 +179,11 @@ end
 
 local function get_rotation_level(facedir, nodename)
     local rl = facedir * 4
-    if nodename == "mcl_signs:standing_sign22_5" then
+    if nodename == "mcl_signs:standing_sign22_5" or  nodename == "mcl_signs:standing_sign22_5_dark" then
         rl = rl + 1
-    elseif nodename == "mcl_signs:standing_sign45" then
+    elseif nodename == "mcl_signs:standing_sign45" or  nodename == "mcl_signs:standing_sign45_dark" then
         rl = rl + 2
-    elseif nodename == "mcl_signs:standing_sign67_5" then
+    elseif nodename == "mcl_signs:standing_sign67_5" or  nodename == "mcl_signs:standing_sign67_5_dark" then
         rl = rl + 3
     end
     return rl
@@ -157,42 +195,6 @@ function mcl_signs:round(num, idp)
 end
 
 function mcl_signs:get_color_for_sign(item_name)
-    local Dyes_table = {
-        { "mcl_dye:aqua", mcl_colors_official.AQUA },
-        { "mcl_dye:black", mcl_colors_official.BLACK },
-        { "mcl_dye:blue", mcl_colors_official.BLUE },
-        { "mcl_dye:brown", mcl_colors_official.brown },
-        { "mcl_dye:cyan", mcl_signs.mcl_wool_colors.unicolor_cyan },
-        { "mcl_dye:cyan 2", mcl_signs.mcl_wool_colors.unicolor_cyan },
-        { "mcl_dye:green", mcl_colors_official.GREEN },
-        { "mcl_dye:green 2", mcl_colors_official.GREEN },
-        { "mcl_dye:dark_green", mcl_colors_official.DARK_GREEN },
-        { "mcl_dye:grey", mcl_colors_official.GRAY },
-        { "mcl_dye:grey 2", mcl_signs.mcl_wool_colors.unicolor_grey },
-        { "mcl_dye:grey 3", mcl_colors_official.GRAY },
-        { "mcl_dye:dark_grey", mcl_colors_official.DARK_GRAY },
-        { "mcl_dye:dark_grey 2", mcl_signs.mcl_wool_colors.unicolor_darkgrey },
-        { "mcl_dye:lightblue", mcl_signs.mcl_wool_colors.unicolor_light_blue },
-        { "mcl_dye:lightblue 2", mcl_signs.mcl_wool_colors.unicolor_light_blue },
-        { "mcl_dye:lime", mcl_signs.unicolor_green_or_lime },
-        { "mcl_dye:magenta", mcl_signs.mcl_wool_colors.unicolor_red_violet_magenta },
-        { "mcl_dye:magenta 2", mcl_signs.mcl_wool_colors.unicolor_red_violet_magenta },
-        { "mcl_dye:magenta 3", mcl_signs.mcl_wool_colors.unicolor_red_violet_magenta },
-        { "mcl_dye:orange", mcl_signs.mcl_wool_colors.unicolor_orange },
-        { "mcl_dye:orange 2", mcl_signs.mcl_wool_colors.unicolor_dark_orange },
-        { "mcl_dye:pink", mcl_signs.mcl_wool_colors.unicolor_light_red_pink },
-        { "mcl_dye:pink 2", mcl_signs.mcl_wool_colors.unicolor_light_red_pink },
-        { "mcl_dye:purple", mcl_colors_official.LIGHT_PURPLE },
-        { "mcl_dye:red", mcl_signs.mcl_wool_colors.unicolor_red },
-        { "mcl_dye:red 2", mcl_colors_official.RED },
-        { "mcl_dye:silver", mcl_signs.mcl_wool_colors.unicolor_grey },
-        { "mcl_dye:violet", mcl_colors_official.DARK_PURPLE },
-        { "mcl_dye:violet 2", mcl_colors_official.DARK_PURPLE },
-        { "mcl_dye:white", mcl_colors_official.WHITE },
-        { "mcl_dye:white 3", mcl_colors_official.WHITE },
-        { "mcl_dye:yellow", mcl_colors_official.YELLOW },
-        { "mcl_dye:yellow 2", mcl_signs.mcl_wool_colors.unicolor_yellow },
-    }
 
     for d = 1, #Dyes_table do
         if Dyes_table[d][1] == item_name then
@@ -208,9 +210,10 @@ function mcl_signs:color_sign (pos, text_color)
     -- debug step
     local meta = minetest.get_meta(pos)
     if not meta then
-        return success
+        minetest.log("verbose","Sign Color Fail - Metadata.")
+        return false
     end
-    minetest.log("Post-Sign Color: " .. meta:get_string("mcl_signs:text_color") .. " " .. meta:get_string("mcl_signs:glowing_sign") .. ".\n" .. dump(pos))
+    minetest.log("verbose","Post-Sign Color: " .. meta:get_string("mcl_signs:text_color") .. " " .. meta:get_string("mcl_signs:glowing_sign") .. ".\n" .. dump(pos))
 
     return success
 
@@ -250,7 +253,7 @@ function mcl_signs:glow_sign (pos)
 
     meta:set_string("mcl_signs:glowing_sign", "true")
     -- debug step
-    -- minetest.log("Post-Sign Glow: " .. meta:get_string("mcl_signs:text_color") .. " " .. meta:get_string("mcl_signs:glowing_sign") .. ".\n" .. dump(pos))
+    minetest.log("verbose","Post-Sign Glow: " .. meta:get_string("mcl_signs:text_color") .. " " .. meta:get_string("mcl_signs:glowing_sign") .. ".\n" .. dump(pos))
 
     return success
 end
@@ -319,7 +322,7 @@ end
 function mcl_signs:generate_texture(lines, signnodename, letter_color)
     local texture = "[combine:" .. SIGN_WIDTH .. "x" .. SIGN_WIDTH
     local ypos
-    if signnodename == "mcl_signs:wall_sign" then
+    if signnodename == "mcl_signs:wall_sign" or signnodename == "mcl_signs:wall_sign_dark" then
         ypos = 30
     else
         ypos = 0
@@ -416,11 +419,13 @@ function mcl_signs:update_sign(pos, fields, sender, force_remove, text_color)
 
     if nn == "mcl_signs:standing_sign" or nn == "mcl_signs:standing_sign22_5" or nn == "mcl_signs:standing_sign45" or nn == "mcl_signs:standing_sign67_5" then
         sign_info = mcl_signs.signtext_info_standing[get_rotation_level(n.param2, nn) + 1]
-    elseif nn == "mcl_signs:wall_sign" then
+    elseif nn == "mcl_signs:standing_sign_dark" or nn == "mcl_signs:standing_sign22_5_dark" or nn == "mcl_signs:standing_sign45_dark" or nn == "mcl_signs:standing_sign67_5_dark" then
+        sign_info = mcl_signs.signtext_info_standing[get_rotation_level(n.param2, nn) + 1]
+    elseif nn == "mcl_signs:wall_sign" or nn == "mcl_signs:wall_sign_dark" then
         sign_info = mcl_signs.signtext_info_wall[mcl_signs:get_wall_signtext_info(n.param2)]
     end
     if sign_info == nil then
-        minetest.log("error", "[mcl_signs] Missing sign_info!")
+        minetest.log("error", "[mcl_signs::update] Missing sign_info!")
         return
     end
 
@@ -463,6 +468,8 @@ function mcl_signs:update_sign(pos, fields, sender, force_remove, text_color)
     meta:set_string("mcl_signs:text_color", text_color)
     -- debug step
     -- minetest.log("Post-Sign Update: " .. meta:get_string("mcl_signs:text_color") .. " " .. meta:get_string("mcl_signs:glowing_sign") .. ".\n" .. dump(pos))
+
+    return true
 
 end
 
