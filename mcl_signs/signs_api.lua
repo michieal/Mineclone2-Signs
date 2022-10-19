@@ -120,15 +120,21 @@ mcl_signs.sign_groups = { handy = 1, axey = 1, deco_block = 1, material_wood = 1
 ---
 --- modname: the mod that defines the wood to add; item_name: the item_string of the wood to add.
 --- eventually, this will become modname, item_name, coloration_code.
-function mcl_signs:register_wood (modname, item_name)
+function mcl_signs.register_wood (modname, item_name)
     if minetest.get_modpath(modname) then
          table.insert(mcl_signs.woods,item_name)
     end
 end
 
+function mcl_signs.register_dye (modname, item_name, color_code)
+    if minetest.get_modpath(modname) then
+        table.insert(mcl_signs.Dyes_table,{ item_name, color_code })
+    end
+end
+
 -- HELPER FUNCTIONS' VARIABLES
 local sign_glow = 6
-local Dyes_table = {
+mcl_signs.Dyes_table = {
     { "mcl_dye:aqua", mcl_colors_official.AQUA },
     { "mcl_dye:black", mcl_colors_official.BLACK },
     { "mcl_dye:blue", mcl_colors_official.BLUE },
@@ -217,22 +223,22 @@ local function get_rotation_level(facedir, nodename)
     return rl
 end
 
-function mcl_signs:round(num, idp)
+function mcl_signs.round(num, idp)
     local mult = 10 ^ (idp or 0)
     return math.floor(num * mult + 0.5) / mult
 end
 
-function mcl_signs:get_color_for_sign(item_name)
+function mcl_signs.get_color_for_sign(item_name)
 
-    for d = 1, #Dyes_table do
-        if Dyes_table[d][1] == item_name then
-            return Dyes_table[d][2]
+    for d = 1, #mcl_signs.Dyes_table do
+        if mcl_signs.Dyes_table[d][1] == item_name then
+            return mcl_signs.Dyes_table[d][2]
         end
     end
     return "false"
 end
 
-function mcl_signs:color_sign (pos, text_color)
+function mcl_signs.color_sign (pos, text_color)
 
     local success = mcl_signs:update_sign(pos, nil, nil, true, text_color)
 
@@ -252,7 +258,7 @@ function mcl_signs:color_sign (pos, text_color)
 
 end
 
-function mcl_signs:glow_sign (pos, remove_glow)
+function mcl_signs.glow_sign (pos, remove_glow)
     local success = true
     -- Get Meta Data for the sign.
     local meta = minetest.get_meta(pos)
@@ -303,16 +309,16 @@ function mcl_signs:glow_sign (pos, remove_glow)
     return success
 end
 
-function mcl_signs:create_lettering(text, signnodename, sign_color)
+function mcl_signs.create_lettering(text, signnodename, sign_color)
     if sign_color == nil then
         sign_color = mcl_colors.BLACK
     end
-    local texture = mcl_signs:generate_texture(mcl_signs:create_lines(text), signnodename, sign_color)
+    local texture = mcl_signs.generate_texture(mcl_signs.create_lines(text), signnodename, sign_color)
 
     return texture
 end
 
-function mcl_signs:create_lines(text)
+function mcl_signs.create_lines(text)
     local line_num = 1
     local tab = {}
     for _, line in ipairs(string_to_line_array(text)) do
@@ -325,7 +331,7 @@ function mcl_signs:create_lines(text)
     return tab
 end
 
-function mcl_signs:generate_line(s, ypos)
+function mcl_signs.generate_line(s, ypos)
     local i = 1
     local parsed = {}
     local width = 0
@@ -366,7 +372,7 @@ function mcl_signs:generate_line(s, ypos)
     return texture
 end
 
-function mcl_signs:generate_texture(lines, signnodename, letter_color)
+function mcl_signs.generate_texture(lines, signnodename, letter_color)
     local texture = "[combine:" .. SIGN_WIDTH .. "x" .. SIGN_WIDTH
     local ypos
     if signnodename == "mcl_signs:wall_sign" or signnodename == "mcl_signs:wall_sign_dark" then
@@ -375,7 +381,7 @@ function mcl_signs:generate_texture(lines, signnodename, letter_color)
         ypos = 0
     end
     for i = 1, #lines do
-        texture = texture .. mcl_signs:generate_line(lines[i], ypos)
+        texture = texture .. mcl_signs.generate_line(lines[i], ypos)
         ypos = ypos + LINE_HEIGHT
     end
 
@@ -383,7 +389,7 @@ function mcl_signs:generate_texture(lines, signnodename, letter_color)
     return texture
 end
 
-function mcl_signs:get_wall_signtext_info(param2, nodename)
+function mcl_signs.get_wall_signtext_info(param2, nodename)
     local dir = minetest.wallmounted_to_dir(param2)
     if dir.x > 0 then
         return 2
@@ -396,7 +402,7 @@ function mcl_signs:get_wall_signtext_info(param2, nodename)
     end
 end
 
-function mcl_signs:destruct_sign(pos)
+function mcl_signs.destruct_sign(pos)
     local objects = minetest.get_objects_inside_radius(pos, 0.5)
     for _, v in ipairs(objects) do
         local ent = v:get_luaentity()
@@ -412,7 +418,7 @@ function mcl_signs:destruct_sign(pos)
     end
 end
 
-function mcl_signs:update_sign(pos, fields, sender, force_remove, text_color)
+function mcl_signs.update_sign(pos, fields, sender, force_remove, text_color)
     -- Get Meta Data for the sign.
     local meta = minetest.get_meta(pos)
 
@@ -507,7 +513,7 @@ function mcl_signs:update_sign(pos, fields, sender, force_remove, text_color)
 
     -- Set the actual properties for the sign
     text_entity:set_properties({
-        textures = { mcl_signs:create_lettering(text, nn, text_color) },
+        textures = { mcl_signs.create_lettering(text, nn, text_color) },
     })
 
     if has_glow then
@@ -529,7 +535,7 @@ function mcl_signs:update_sign(pos, fields, sender, force_remove, text_color)
 
 end
 
-function mcl_signs:show_formspec(player, pos)
+function mcl_signs.show_formspec(player, pos)
     minetest.show_formspec(
             player:get_player_name(),
             "mcl_signs:set_text_" .. pos.x .. "_" .. pos.y .. "_" .. pos.z,
@@ -537,7 +543,7 @@ function mcl_signs:show_formspec(player, pos)
     )
 end
 
-function mcl_signs:generate_signs()
+function mcl_signs.generate_signs()
     local node_sounds
     if minetest.get_modpath("mcl_sounds") then
         node_sounds = mcl_sounds.node_sound_wood_defaults()
@@ -939,7 +945,7 @@ function mcl_signs:generate_signs()
             local yaw = pi * 2 - placer:get_look_horizontal()
 
             -- Select one of 16 possible rotations (0-15)
-            local rotation_level = round((yaw / (pi * 2)) * 16)
+            local rotation_level = mcl_signs.round((yaw / (pi * 2)) * 16)
 
             if rotation_level > 15 then
                 rotation_level = 0
@@ -995,7 +1001,7 @@ function mcl_signs:generate_signs()
 
         minetest.sound_play({ name = "default_place_node_hard", gain = 1.0 }, { pos = place_pos }, true)
 
-        mcl_signs:show_formspec(placer, place_pos)
+        mcl_signs.show_formspec(placer, place_pos)
         return itemstack
     end
     minetest.register_node("mcl_signs:wall_sign_dark", mcl_signs.wall_standard_dark)

@@ -37,7 +37,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
     end
 end)
 
-mcl_signs:generate_signs() -- initialize the nodes for the signs.
+mcl_signs.generate_signs() -- initialize the nodes for the signs.
 
 -- FIXME: Prevent entity destruction by /clearobjects
 minetest.register_entity("mcl_signs:text", {
