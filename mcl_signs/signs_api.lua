@@ -5,6 +5,7 @@
 ---
 
 local DEBUG = false -- special debug setting.
+local table = table -- copied from the original signs init file.
 
 if DEBUG then
     minetest.log("Signs API Loading")
@@ -170,6 +171,88 @@ function mcl_signs.register_dye (modname, item_name, color_code)
         table.insert(mcl_signs.Dyes_table,{ item_name, color_code })
     end
 end
+
+-- DEFINE SIGN BASE TYPES
+mcl_signs.wall_standard={}
+mcl_signs.standing_standard ={}
+
+--- Register a new sign, tint the textures, and gives it an unique node name
+--- modname: optional (pass "" or "false" to ignore), for use with other mods to
+--- allow the creation of a sign from the mod's wood (if installed).
+--- type: "wall", "standing".
+---
+--- color: the color code to color the base sign textures.
+---
+--- _name: the sign's name suffix, such as "_dark" or "_red", etc.
+function mcl_signs.register_sign (modname, type, color, _name)
+    local mod_name_pass = false
+    if modname ~= "" and modname ~= "false" then
+        if minetest.get_modpath(modname) then
+            mod_name_pass = true
+        end
+        if mod_name_pass == false then
+            return
+        end
+    end
+    local wsign ={}
+
+    if type == "wall" then
+        wsign =   table.copy(mcl_signs.wall_standard)
+    end
+
+  
+
+end
+--- the same as register_sign, except caller defines the textures.
+--- modname: optional (pass "" or "false" to ignore), for use with other mods to
+--- allow the creation of a sign from the mod's wood (if installed).
+--- type: "wall", "standing".
+---
+--- color: the color code to color the base sign textures. (use white or grey to not color the sign)
+---
+--- _name: the sign's name suffix, such as "_dark" or "_red", etc.
+---
+--- model_texture: the texture file to use for the sign.
+---
+--- inventory_image: the image used for in-inventory and in hand.
+function mcl_signs.register_sign_and_textures (modname, type, color, _name, model_texture, inventory_image)
+    local mod_name_pass = false
+    if modname ~= "" and modname ~= "false" then
+        if minetest.get_modpath(modname) then
+            mod_name_pass = true
+        end
+        if mod_name_pass == false then
+            return
+        end
+    end
+
+end
+
+--- the same as register_sign_and_textures, except uses 1 image for all of the model textures.
+--- modname: optional (pass "" or "false" to ignore), for use with other mods to
+--- allow the creation of a sign from the mod's wood (if installed).
+--- type: "wall", "standing".
+---
+--- color: the color code to color the base sign textures. (use white or grey to not color the sign)
+---
+--- _name: the sign's name suffix, such as "_dark" or "_red", etc.
+---
+--- model_texture: the texture file to use for the sign.
+---
+--- inventory_image: the image used for in-inventory and in hand.
+function mcl_signs.register_sign_and_tiles (modname, type, color, _name, tiles, inventory_image)
+    local mod_name_pass = false
+    if modname ~= "" and modname ~= "false" then
+        if minetest.get_modpath(modname) then
+            mod_name_pass = true
+        end
+        if mod_name_pass == false then
+            return
+        end
+    end
+
+end
+
 
 -- Helper functions
 local function string_to_array(str)
@@ -549,7 +632,6 @@ function mcl_signs:generate_signs()
         node_sounds = mcl_sounds.node_sound_wood_defaults()
     end
 
-    local table = table -- copied from the original signs init file.
     -- wall signs' & hanging signs' base
     mcl_signs.wall_standard = {
         description = S("Sign"),
