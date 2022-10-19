@@ -58,8 +58,15 @@ minetest.register_entity("mcl_signs:text", {
         end
         local meta = minetest.get_meta(self.object:get_pos())
         local text = meta:get_string("text")
+--[[
+        if DEBUG then
+            minetest.log("text found:")
+            minetest.log(dump(text))
+        end
+]]
+
         self.object:set_properties({
-            textures = { mcl_signs:create_lettering(text, self._signnodename) },
+            textures = { mcl_signs.create_lettering(text, self._signnodename) },
         })
         self.object:set_armor_groups({ immortal = 1 })
     end,

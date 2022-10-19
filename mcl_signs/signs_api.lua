@@ -174,17 +174,27 @@ mcl_signs.Dyes_table = {
 -- Helper functions
 local function string_to_array(str)
     local tab = {}
+    if DEBUG then
+        minetest.log("text passed as str:")
+        minetest.log(dump(str))
+    end
+
     for i = 1, string.len(str) do
-        table.insert(tab, string.sub(str, i, i))
+    table.insert(tab, string.sub(str, i, i))
     end
     return tab
-end
+    end
 
 local function string_to_line_array(str)
     local tab = {}
     local current = 1
     local linechar = 1
     tab[1] = ""
+    if DEBUG then
+        minetest.log("stringtolinearray::text found:")
+        minetest.log(dump(str))
+    end
+
     for _, char in ipairs(string_to_array(str)) do
         -- New line
         if char == "\n" then
@@ -313,6 +323,12 @@ function mcl_signs.create_lettering(text, signnodename, sign_color)
     if sign_color == nil then
         sign_color = mcl_colors.BLACK
     end
+
+    if DEBUG then
+        minetest.log("create_lettering text found:")
+        minetest.log(dump(text))
+    end
+
     local texture = mcl_signs.generate_texture(mcl_signs.create_lines(text), signnodename, sign_color)
 
     return texture
@@ -321,6 +337,11 @@ end
 function mcl_signs.create_lines(text)
     local line_num = 1
     local tab = {}
+    if DEBUG then
+        minetest.log("create_lines text found:")
+        minetest.log(dump(text))
+    end
+
     for _, line in ipairs(string_to_line_array(text)) do
         if line_num > NUMBER_OF_LINES then
             break
