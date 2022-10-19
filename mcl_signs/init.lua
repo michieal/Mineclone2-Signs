@@ -37,7 +37,7 @@ minetest.register_on_player_receive_fields(function(player, formname, fields)
     end
 end)
 
-mcl_signs.generate_signs() -- initialize the nodes for the signs.
+mcl_signs:generate_signs() -- initialize the nodes for the signs.
 
 -- FIXME: Prevent entity destruction by /clearobjects
 minetest.register_entity("mcl_signs:text", {
@@ -58,15 +58,8 @@ minetest.register_entity("mcl_signs:text", {
         end
         local meta = minetest.get_meta(self.object:get_pos())
         local text = meta:get_string("text")
---[[
-        if DEBUG then
-            minetest.log("text found:")
-            minetest.log(dump(text))
-        end
-]]
-
         self.object:set_properties({
-            textures = { mcl_signs.create_lettering(text, self._signnodename) },
+            textures = { mcl_signs:create_lettering(text, self._signnodename) },
         })
         self.object:set_armor_groups({ immortal = 1 })
     end,
@@ -107,7 +100,7 @@ if minetest.get_modpath("mcl_core") then
         local c = mcl_signs.woods[w]
 
         minetest.register_craft({
-            output = itemstring,
+            output = itemstring.." 3",
             recipe = {
                 { c, c, c },
                 { c, c, c },
